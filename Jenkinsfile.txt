@@ -1,10 +1,13 @@
 pipeline {
-    agent {
-        docker { image 'python:3' }
-    }
+    agent any
     
     environment {
         PYTHON_VERSION = '3.8'  
+    }
+
+    tools {
+        // Define the Python tool with the desired version
+        python "Python ${PYTHON_VERSION}"
     }
 
     stages {
@@ -12,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Install required Python packages using pip
-                    bat "python${PYTHON_VERSION} -m pip install -r requirements.txt"
+                    bat "python.exe -m pip install -r requirements.txt"
                 }
             }
         }
@@ -21,13 +24,14 @@ pipeline {
             steps {
                 script {
                     // Set up a virtual environment
-                    bat "python${PYTHON_VERSION} -m venv venv"
+                    bat "python -m venv venv"
 
                     // Activate the virtual environment
                     if (isUnix()) {
-                        bat "source venv/bin/activate"
+                        sh "source venv/bin/activate"
                     } else {
-                        bat "venv\\Scripts\\activate"
+                        // On Windows, use `call` to activate the virtual environment
+                        bat "call venv\\Scripts\\activate"
                     }
                 }
             }
@@ -37,7 +41,7 @@ pipeline {
             steps {
                 script {
                     // Run your tests or other commands within the virtual environment
-                    bat "python${PYTHON_VERSION} your_test_script.py"
+                    bat "python your_test_script.py"
                 }
             }
         }
