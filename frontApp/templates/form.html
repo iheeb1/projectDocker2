@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 0; /* Remove default margin */
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Viewport height */
+            background-color: #f0f0f0; /* Set a background color */
+        }
+
+        .box {
+            text-align: center;
+            background-color: aliceblue;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+
+        .box h1 {
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .submit {
+            background-color: #08d;
+            border-radius: 12px;
+            border: 0;
+            box-sizing: border-box;
+            color: #eee;
+            cursor: pointer;
+            font-size: 18px;
+            height: 50px;
+            margin-top: 20px; /* Adjusted margin */
+            width: 100px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="form-container">
+                <h1>Test VGG</h1>
+                <form action="http://localhost:5000/uploadervgg" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" />
+                    <input class="submit" type="submit" />
+                </form>
+
+                <h1>Test SVM</h1>
+                <form action="http://localhost:5000/uploader" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" />
+                    <input class="submit" type="submit" />
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
