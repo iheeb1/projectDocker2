@@ -1,16 +1,29 @@
-node {
-   stage('Build') {
-       
-         bat "docker-compose build"
-   }
-   stage("Test"){
-        bat "python unittests.py"
-        post {
-                always {junit 'test-reports/*.xml'}
-            }
+pipeline {
+    agent any
+    
+    environment {
+        PYTHON_VERSION = '3.8'  
     }
 
-    stage("Run"){
-        bat "docker-compose up "
-    }
+    stages { 
+    
+
+ stage('Install Dependencies') {
+            steps {
+                script {
+                    // Install required Python packages using pip
+                    bat "pip install -r requirements.txt"
+                }
+            }
+        }
+        stage('Set Up Environment') {
+            steps {
+                script {
+                    // Set up a virtual environment
+                    bat "python${PYTHON_VERSION} -m venv venv"
+                    bat "source venv/bin/activate"
+                }
+            }
+        }
+}
 }
