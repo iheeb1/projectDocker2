@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     // Install required Python packages using pip
-                    bat "python -m pip install -r requirements.txt"
+                    bat "py -m pip install -r requirements.txt"
                 }
             }
         }
