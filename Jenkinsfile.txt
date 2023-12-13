@@ -5,13 +5,10 @@ pipeline {
         PYTHON_VERSION = '3.8'  
     }
 
-    tools {
-        // Define the Python tool with the desired version
-        python "Python ${PYTHON_VERSION}"
-    }
+    stages { 
+    
 
-    stages {
-        stage('Install Dependencies') {
+ stage('Install Dependencies') {
             steps {
                 script {
                     // Install required Python packages using pip
@@ -19,31 +16,14 @@ pipeline {
                 }
             }
         }
-
         stage('Set Up Environment') {
             steps {
                 script {
                     // Set up a virtual environment
-                    bat "python -m venv venv"
-
-                    // Activate the virtual environment
-                    if (isUnix()) {
-                        sh "source venv/bin/activate"
-                    } else {
-                        // On Windows, use `call` to activate the virtual environment
-                        bat "call venv\\Scripts\\activate"
-                    }
+                    bat "python${PYTHON_VERSION} -m venv venv"
+                    bat "source venv/bin/activate"
                 }
             }
         }
-
-        stage('Run Your Tests') {
-            steps {
-                script {
-                    // Run your tests or other commands within the virtual environment
-                    bat "python your_test_script.py"
-                }
-            }
-        }
-    }
+}
 }
