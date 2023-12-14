@@ -10,17 +10,19 @@ pipeline {
 
  stage('Build') {
        
-         bat "docker-compose build"
+         sh "docker-compose build"
    }
    stage("Test"){
-        bat "py unittests.py"
+        sh "py unittests.py"
         post {
                 always {junit 'test-reports/*.xml'}
             }
     }
 
     stage("Run"){
-        bat "docker-compose up "
+        steps{
+            sh "docker-compose up "
+        }
     }
        
 }
