@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "docker-compose build"
+                    bat "docker-compose build"
                 }
             }
         }
@@ -17,7 +17,7 @@ pipeline {
         stage("Test") {
             steps {
                 script {
-                    sh "py unittests.py"
+                    bat "py unittests.py"
                 }
             }
             post {
@@ -30,7 +30,7 @@ pipeline {
         stage("Run") {
             steps {
                 script {
-                    sh "docker-compose up"
+                    bat "docker-compose up"
                 }
             }
         }
