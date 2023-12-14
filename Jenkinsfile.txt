@@ -8,20 +8,20 @@ pipeline {
     stages { 
     
 
- stage('Install Dependencies') {
-            steps {
-                script {
-                    bat "python -m pip install -r requirements.txt"
-                }
+ stage('Build') {
+       
+         bat "docker-compose build"
+   }
+   stage("Test"){
+        bat "py unittests.py"
+        post {
+                always {junit 'test-reports/*.xml'}
             }
-        }
-        stage('Set Up Environment') {
-            steps {
-                script {
-                    bat "python${PYTHON_VERSION} -m venv venv"
-                    bat "source venv/bin/activate"
-                }
-            }
-        }
+    }
+
+    stage("Run"){
+        bat "docker-compose up "
+    }
+       
 }
 }

@@ -80,12 +80,11 @@ def upload_file():
         print(music_class)
         return music_class
 
+
 def image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         encoded_image = base64.b64encode(image_file.read())
         return encoded_image.decode("utf-8")
-    
-
 @app.route('/uploaderVGG19', methods=['POST'])
 def classify_image():
     data = request.get_json()
@@ -96,7 +95,7 @@ def classify_image():
         decoded_image_data = base64.b64decode(encoded_image_data)
 
         # Save decoded data to a temporary image file
-        temp_image_file = '/Nouvarch/shared_volume/temp_image.jpg'
+        temp_image_file = '/3eme/shared_volume/temp_image.jpg'
         with open(temp_image_file, 'wb') as temp_file:
             temp_file.write(decoded_image_data)
 
@@ -104,7 +103,7 @@ def classify_image():
         img = image.load_img(temp_image_file, target_size=(224, 224))
         img_array = image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
-        img_array /= 255.0  # Rescale the pixel values to the range [0, 1]
+        img_array /= 255.0  
 
         # Make predictions
         predictions = model.predict(img_array)
