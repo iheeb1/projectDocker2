@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    
+    environment {
+        PYTHON_VERSION = '3.8'  
+    }
 
     stages { 
     
@@ -7,15 +11,14 @@ pipeline {
  stage('Install Dependencies') {
             steps {
                 script {
-                    bat "py -m pip install -r App/requirements.txt"
+                    bat "python -m pip install -r requirements.txt"
                 }
             }
         }
         stage('Set Up Environment') {
             steps {
                 script {
-                    // Set up a virtual environment
-                    bat "py -m venv venv"
+                    bat "python${PYTHON_VERSION} -m venv venv"
                     bat "source venv/bin/activate"
                 }
             }

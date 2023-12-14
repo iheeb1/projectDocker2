@@ -53,54 +53,72 @@ def allowed_file(filename):
            
 
 	
-@app.route('/uploader', methods = ['GET','POST'])
+@app.route('/uploaderSVM', methods=['POST'])
 def upload_file():
-   if request.method == 'GET':
-       return "hello"
-   if request.method == 'POST':
-         file = request.files['file']
-         if file.filename == '':
-              return 'No file selected'
-         if file and allowed_file(file.filename):
-          filename = secure_filename(file.filename)
-          file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                   
-          signal, rate = librosa.load(UPLOAD_FOLDER+'/'+filename)  
-          S = librosa.feature.melspectrogram(signal, sr=rate, n_fft=2048,    hop_length=512, n_mels=128)
-          S_DB = librosa.power_to_db(S, ref=np.max)
-          S_DB = S_DB.flatten()[:1200]
-          clf = pickle.load(open('SVM.pkl' , 'rb'))
-          ans = clf.predict([S_DB])[0]
-          music_class = str(ans)
-          print(music_class)
-          return music_class
-
-'''@app.route('/uploadervgg', methods = ['GET','POST'])
-def classify_vgg():
-    if request.method == 'GET':
-           return "hello"
     if request.method == 'POST':
-         file = request.files['file']
-         if file.filename == '':
-              return 'No file selected'
-         if file and allowed_file(file.filename):
-          filename = secure_filename(file.filename)
-          file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                   
-          vgg19 = tfpdef.keras.models.load_model("vgg19.h5")
-          image = load_img(UPLOAD_FOLDER+'/'+filename, target_size=(224, 224, 3))
-          np.expand_dims(image, axis=0)
-          image = img_to_array(image)
-          image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+        audio_base64 = request.form['audio_base64']
 
-          image = preprocess_input(image)
-          yhat = model.predict(image)
-    # create a list containing the class labels
-          class_labels = ["blues", "classical", "country", "disco", "hiphop", "metal", "pop", "reggae", "rock"]
-    # find the index of the class with maximum score
-          pred = np.argmax(class_labels, axis=-1)
-    # print the label of the class with maximum score
-          return class_labels[pred]'''
+        audio_data = base64.b64decode(audio_base64)
+        filename = 'uploaded_audio.wav'  
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+        with open(filepath, 'wb') as f:
+            f.write(audio_data)
+
+        signal, rate = librosa.load(filepath)
+        S = librosa.feature.melspectrogram(signal, sr=rate, n_fft=2048, hop_length=512, n_mels=128)
+        S_DB = librosa.power_to_db(S, ref=np.max)
+        S_DB = S_DB.flatten()[:1200]
+
+        # Load the SVM model
+        clf = pickle.load(open('SVM.pkl', 'rb'))
+
+        # Make predictions
+        ans = clf.predict([S_DB])[0]
+        music_class = str(ans)
+
+        print(music_class)
+        return music_class
+
+def image_to_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read())
+        return encoded_image.decode("utf-8")
+    
+
+@app.route('/uploaderVGG19', methods=['POST'])
+def classify_image():
+    data = request.get_json()
+
+    if data and "image_data" in data:
+        # Decode base64 data
+        encoded_image_data = data["image_data"]
+        decoded_image_data = base64.b64decode(encoded_image_data)
+
+        # Save decoded data to a temporary image file
+        temp_image_file = '/Nouvarch/shared_volume/temp_image.jpg'
+        with open(temp_image_file, 'wb') as temp_file:
+            temp_file.write(decoded_image_data)
+
+        # Load and preprocess the image
+        img = image.load_img(temp_image_file, target_size=(224, 224))
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array /= 255.0  # Rescale the pixel values to the range [0, 1]
+
+        # Make predictions
+        predictions = model.predict(img_array)
+
+        # Decode the predictions
+        genres = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
+        predicted_genre = genres[np.argmax(predictions)]
+
+        response_data = {"received_message": "Image file received and processed successfully",
+                         "response": f"Predicted Genre: {predicted_genre}"}
+    else:
+        response_data = {"received_message": "No image file received", "response": "Error"}
+
+    return jsonify(response_data)
           
           
     
