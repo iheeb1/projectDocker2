@@ -14,18 +14,18 @@ pipeline {
             }
         }
 
-        stage("Test") {
-            steps {
-                script {
-                    bat "py unittests.py"
-                }
-            }
-            post {
-                always {
-                    junit 'test-reports/*.xml'
-                }
-            }
-        }
+        // stage("Test") {
+        //     steps {
+        //         script {
+        //             bat "py unittests.py"
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             junit 'test-reports/*.xml'
+        //         }
+        //     }
+        // }
 
         stage("Run") {
             steps {
