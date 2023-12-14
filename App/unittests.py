@@ -12,12 +12,12 @@ class TestFlaskApi(unittest.TestCase):
         self.app.testing = True
 
     def test_svm(self):
-        rv = self.app.get(BASE_URL+'uploader')
+        rv = self.app.get(BASE_URL+'uploaderSVM')
         self.assertEqual(rv.status, '200 OK')
 
     def test_vgg(self):
 
-        rv = self.app.get(BASE_URL+'uploadervgg')
+        rv = self.app.get(BASE_URL+'uploaderVGG19')
         self.assertEqual(rv.status, '200 OK')
         
 

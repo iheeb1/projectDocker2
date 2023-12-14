@@ -1,7 +1,6 @@
 # To ensure app dependencies are ported from your virtual environment/host machine into your container, run 'pip freeze > requirements.txt' in the terminal to overwrite this file
 flask==2.1.0
 librosa==0.8.1
-numba==0.48
 numpy
 keras
 scikit-learn

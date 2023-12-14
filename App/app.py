@@ -81,44 +81,44 @@ def upload_file():
         return music_class
 
 
-def image_to_base64(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded_image = base64.b64encode(image_file.read())
-        return encoded_image.decode("utf-8")
+# def image_to_base64(image_path):
+#     with open(image_path, "rb") as image_file:
+#         encoded_image = base64.b64encode(image_file.read())
+#         return encoded_image.decode("utf-8")
         
-@app.route('/uploaderVGG19', methods=['POST'])
-def classify_image():
-    data = request.get_json()
+# @app.route('/uploaderVGG19', methods=['POST'])
+# def classify_image():
+#     data = request.get_json()
 
-    if data and "image_data" in data:
-        # Decode base64 data
-        encoded_image_data = data["image_data"]
-        decoded_image_data = base64.b64decode(encoded_image_data)
+#     if data and "image_data" in data:
+#         # Decode base64 data
+#         encoded_image_data = data["image_data"]
+#         decoded_image_data = base64.b64decode(encoded_image_data)
 
-        # Save decoded data to a temporary image file
-        temp_image_file = '/3eme/shared_volume/temp_image.jpg'
-        with open(temp_image_file, 'wb') as temp_file:
-            temp_file.write(decoded_image_data)
+#         # Save decoded data to a temporary image file
+#         temp_image_file = '/3eme/shared_volume/temp_image.jpg'
+#         with open(temp_image_file, 'wb') as temp_file:
+#             temp_file.write(decoded_image_data)
 
-        # Load and preprocess the image
-        img = image.load_img(temp_image_file, target_size=(224, 224))
-        img_array = image.img_to_array(img)
-        img_array = np.expand_dims(img_array, axis=0)
-        img_array /= 255.0  
+#         # Load and preprocess the image
+#         img = image.load_img(temp_image_file, target_size=(224, 224))
+#         img_array = image.img_to_array(img)
+#         img_array = np.expand_dims(img_array, axis=0)
+#         img_array /= 255.0  
 
-        # Make predictions
-        predictions = model.predict(img_array)
+#         # Make predictions
+#         predictions = model.predict(img_array)
 
-        # Decode the predictions
-        genres = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
-        predicted_genre = genres[np.argmax(predictions)]
+#         # Decode the predictions
+#         genres = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
+#         predicted_genre = genres[np.argmax(predictions)]
 
-        response_data = {"received_message": "Image file received and processed successfully",
-                         "response": f"Predicted Genre: {predicted_genre}"}
-    else:
-        response_data = {"received_message": "No image file received", "response": "Error"}
+#         response_data = {"received_message": "Image file received and processed successfully",
+#                          "response": f"Predicted Genre: {predicted_genre}"}
+#     else:
+#         response_data = {"received_message": "No image file received", "response": "Error"}
 
-    return jsonify(response_data)
+#     return jsonify(response_data)
           
           
     
